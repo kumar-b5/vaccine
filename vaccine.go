@@ -49,7 +49,7 @@ type  SimpleChaincode struct {
 //			  that element when reading a JSON object into the struct e.g. JSON make -> Struct Make.
 //==============================================================================================================================
 type Temperature struct {
-	TempTime				string `json:"temptime"`
+	V5cID  string `json:"v5cID"`
 	Temperature			string `json:"temperature"`
 }
 
@@ -65,7 +65,6 @@ type Vehicle struct {
 	Colour          string `json:"colour"`  //Date
 	V5cID           string `json:"v5cID"`  //RFID
 	LeaseContractID string `json:"leaseContractID"`  //Batch-Serial No
-	Temps []Temperature
 }
 
 
@@ -745,14 +744,14 @@ func (t *SimpleChaincode) scrap_vehicle(stub *shim.ChaincodeStub, v Vehicle, cal
 
 func (t *SimpleChaincode) record_temp(stub *shim.ChaincodeStub, v Vehicle, caller string, caller_affiliation int, args []string) ([]byte, error) {
 
-	if		len(args) >=2 	{
+	if		len(args) >=1 	{
 
 	 _, err := json.Marshal(v)
 
 	if err != nil { return nil, errors.New("GET_VEHICLE_DETAILS: Invalid vehicle object") }
 
-	newTemp := Temperature{TempTime: args[0],Temperature: args[1]}
-	v.Temps = append(v.Temps,newTemp)
+	newTemp := Temperature{V5cId: v.V5cId,Temperature: args[0]}
+	b, err := json.Marshal(newTemp)
 
 
              //Log the Temperature to the Vaccine
@@ -760,9 +759,8 @@ func (t *SimpleChaincode) record_temp(stub *shim.ChaincodeStub, v Vehicle, calle
 		return nil, errors.New("Insufficient values, required datetime and Temperature")
 	}
 
-	_, err := t.save_changes(stub, v)
-
-															if err != nil { fmt.Printf("SCRAP_VEHICLE: Error saving changes: %s", err); return nil, errors.New("SCRAP_VEHICLError saving changes") }
+	err = stub.PutState(v.V5cId,b)
+	if err != nil { fmt.Printf("Record Temperature  :Error saving changes: %s", err); return nil, errors.New("Record Temperature Error saving changes") }
 
 	return nil, nil
 
