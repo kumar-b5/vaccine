@@ -750,9 +750,8 @@ func (t *SimpleChaincode) record_temp(stub *shim.ChaincodeStub, v Vehicle, calle
 
 	if err != nil { return nil, errors.New("GET_VEHICLE_DETAILS: Invalid vehicle object") }
 
-	//newTemp := Temperature{TempTime: args[0],Temperature: args[1]}
-	//newTemp
-	//v.Temps = append(v.Temps,newTemp)
+	newTemp := Temperature{V5cID: v.V5cID,Temperature: args[0]}
+	b, err := json.Marshal(newTemp)
 
 
              //Log the Temperature to the Vaccine
@@ -760,7 +759,7 @@ func (t *SimpleChaincode) record_temp(stub *shim.ChaincodeStub, v Vehicle, calle
 		return nil, errors.New("Insufficient values, required datetime and Temperature")
 	}
 
-	_, err := t.save_changes(stub, v)
+	_, err := t.save_changes(stub, b)
 
 															if err != nil { fmt.Printf("SCRAP_VEHICLE: Error saving changes: %s", err); return nil, errors.New("SCRAP_VEHICLError saving changes") }
 
