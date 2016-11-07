@@ -13,7 +13,7 @@ import (
 	"regexp"
 )
 
-==============================================================================================================================
+//==============================================================================================================================
 //	 Participant types - Each participant type is mapped to an integer which we use to compare to the value stored in a
 //						 user's eCert
 //==============================================================================================================================
@@ -308,8 +308,8 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 		} else if function == "update_vin" 			{ return t.update_vin(stub, v, caller, caller_affiliation, args[0])
 		} else if function == "update_colour" 		{ return t.update_colour(stub, v, caller, caller_affiliation, args[0])
 		} else if function == "scrap_vehicle" 		{ return t.scrap_vehicle(stub, v, caller, caller_affiliation)
-		//} else if function == "record_temp" 		{ return t.record_temp(stub, v, caller, caller_affiliation, args) }
-								}
+		} else if function == "record_temp" 		{ return t.record_temp(stub, v, caller, caller_affiliation, args) }
+								
 		return nil, errors.New("Function of that name doesn't exist.")
 
 	}
@@ -742,26 +742,26 @@ func (t *SimpleChaincode) scrap_vehicle(stub *shim.ChaincodeStub, v Vehicle, cal
 
 }
 
-//func (t *SimpleChaincode) record_temp(stub *shim.ChaincodeStub, v Vehicle, caller string, caller_affiliation int, args []string) ([]byte, error) {
+func (t *SimpleChaincode) record_temp(stub *shim.ChaincodeStub, v Vehicle, caller string, caller_affiliation int, args []string) ([]byte, error) {
 
-//	if		len(args) >=1 	{
+	if		len(args) >=1 	{
 
-//	 _, err := json.Marshal(v)
+	 _, err := json.Marshal(v)
 
-	//if err != nil { return nil, errors.New("GET_VEHICLE_DETAILS: Invalid vehicle object") }
+	if err != nil { return nil, errors.New("GET_VEHICLE_DETAILS: Invalid vehicle object") }
 
-	//newTemp := Temperature{V5cId: v.V5cId,Temperature: args[0]}
-	//b, err := json.Marshal(newTemp)
-        //err = stub.PutState(v.V5cId,b)
-	//if err != nil { fmt.Printf("Record Temperature  :Error saving changes: %s", err); return nil, errors.New("Record Temperature Error saving changes") }
+	newTemp := Temperature{V5cId: v.V5cId,Temperature: args[0]}
+	b, err := json.Marshal(newTemp)
+        err = stub.PutState(v.V5cId,b)
+	if err != nil { fmt.Printf("Record Temperature  :Error saving changes: %s", err); return nil, errors.New("Record Temperature Error saving changes") }
 
 
              //Log the Temperature to the Vaccine
-//	} else {
-//		return nil, errors.New("Insufficient values, required datetime and Temperature")
-//	}
+	} else {
+		return nil, errors.New("Insufficient values, required datetime and Temperature")
+	}
 
-//}
+}
 
 //=================================================================================================================================
 //	 Read Functions
