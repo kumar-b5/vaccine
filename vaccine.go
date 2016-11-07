@@ -752,7 +752,7 @@ func (t *SimpleChaincode) record_temp(stub *shim.ChaincodeStub, v Vehicle, calle
 
 	newTemp := Temperature{V5cId: v.V5cId,Temperature: args[0]}
 	b, err := json.Marshal(newTemp)
-  err = stub.PutState(v.V5cId,b)
+        //err = stub.PutState(v.V5cId,b)
 	if err != nil { fmt.Printf("Record Temperature  :Error saving changes: %s", err); return nil, errors.New("Record Temperature Error saving changes") }
 
 
