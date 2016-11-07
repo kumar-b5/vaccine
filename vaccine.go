@@ -761,9 +761,6 @@ func (t *SimpleChaincode) record_temp(stub *shim.ChaincodeStub, v Vehicle, calle
 		return nil, errors.New("Insufficient values, required datetime and Temperature")
 	}
 
-
-	return nil, nil
-
 }
 
 //=================================================================================================================================
